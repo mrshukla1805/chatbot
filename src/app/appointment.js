@@ -24,13 +24,17 @@ const App = () => {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [appointments]);
 
   const fetchAppointments = () => {
     fetch('https://us-central1-proven-gasket-416318.cloudfunctions.net/doctors/doctors/1/slot')
       .then(response => response.json())
       .then(data => {
-        setAppointments(data);
+        const updatedData = data.map(item => ({
+          ...item,
+          isSlotBooked: Boolean(item.isSlotBooked) // Convert to boolean
+        }));
+        setAppointments(updatedData);
       })
       .catch(error => {
         console.error('Error fetching appointments:', error);
